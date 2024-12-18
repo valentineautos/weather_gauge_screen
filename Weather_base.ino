@@ -69,7 +69,7 @@ volatile bool data_ready =  false;
 hw_timer_t* timer =         nullptr;
 
 uint32_t last_update_time = 0;
-const uint32_t timeout_ms = 30000; // how long until considered timed out
+const uint32_t timeout_ms = 120000; // how long until considered timed out
 
 const char* months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -417,14 +417,14 @@ void loop(){
     esp_now_timeout();
 
     if (data_ready) {
-      if (first_load == false) {
-        Serial.print("first data received");
-        lv_scr_load_anim(home_scr, LV_SCR_LOAD_ANIM_FADE_IN, 500, 0, true); // anim out and delete
-        first_load = true;
-      }
       update_time();
       update_location();
       // do stuff here when ESPNow recieves updates
       data_ready = false;
+       if (first_load == false) {
+        Serial.print("first data received");
+        lv_scr_load_anim(home_scr, LV_SCR_LOAD_ANIM_OUT_TOP, 500, 1000, true); // anim out and delete
+        first_load = true;
+      }
     }
 }
